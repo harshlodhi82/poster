@@ -1,0 +1,8 @@
+data/
+docs/
+etc/
+log/
+node_modules/
+output/
+reports/
+tmp/

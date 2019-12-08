@@ -1,0 +1,9 @@
+node_modules/
+.DS_Store
+.config/
+log/
+tmp/
+output/
+secret/
+reports/
+data/

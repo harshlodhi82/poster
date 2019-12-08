@@ -1,0 +1,19 @@
+{
+  "extends": "standard",
+  "globals": {
+    "arguments": "readonly"
+  },
+  "rules": {
+    require-await: "error",
+    "no-unmodified-loop-condition": "warn",
+  	"object-curly-spacing": ["error", "never"],
+    "no-use-before-define": "off",
+    "no-unused-vars": "warn",
+    "brace-style": ["error", "stroustrup"],
+    "no-unreachable": "warn",
+    "camelcase": "off",
+    "operator-linebreak": ["error", "before", {"overrides": {"=": "ignore"}}],
+    "standard/no-callback-literal": "off"
+  },
+  "plugins": ["json"]
+}
