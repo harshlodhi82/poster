@@ -9,6 +9,7 @@
     "test": "node bin/test"
   },
   "dependencies": {
+    "@k3rn31p4nic/google-translate-api": "^1.1.0",
     "auto-bind": "^2.1.0",
     "fs-extra": "^8.1.0",
     "lib": "file:lib",
