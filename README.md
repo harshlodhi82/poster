@@ -39,7 +39,7 @@ log.info('hello')
 
 ## Linting
 
-Do not disable linting or change rules. Can add `// eslint-disable-next-line` when not other option.
+Do not disable linting or change rules. Can add `// eslint-disable-next-line` when no other option.
 
 ## Dependencies
 
