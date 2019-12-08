@@ -11,6 +11,8 @@ or
 npm test libExample
 ```
 
+Do not turn off of modify tests to make them pass (if you think there is a bug let me know).
+
 ## How to organize files
 
 ```
