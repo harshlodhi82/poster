@@ -11,7 +11,7 @@ or
 npm test libExample
 ```
 
-Do not turn off of modify tests to make them pass (if you think there is a bug let me know).
+Do not turn off of modify tests to make them pass (unless the test is incorrect). If a test is incorrect or has a bug, let me know.
 
 ## How to organize files
 
@@ -50,7 +50,15 @@ Do not add unececessary npm modules. If the function needed is small, copy it in
 - Always use async await over callbacks/.then
 - Always use const/let over var
 - Awalys use arrow functions
-- Always use destructuring e.g. `const doSomething = ({propA, propB, propC} = {}) => {}`
+- Always use destructuring, e.g.:
+	- `const saveAccountToFile = ({username, age, location, firstName, lastName} = {}) => {...}`
+	- `function send({message, recipient, sender} = {}) {...}`
+	- `const {username, password} = account`
+- Do not use more than 2 arguments in a function, use a destructured object instead
 - Keep functions small, pure, and make them do 1 thing
-- Name functions and variables carefully e.g. `let number = 7` over `let n = 7`
-- Do not use more than 2 arguments in a function, use objects instead
+- Name functions and variables very descriptively, e.g.:
+  - `let number = 7` over `let n = 7`
+  - `getUsernameFromAccount()` over `getUsername()`
+  - `accountId` over `id`
+  - `rowIndex` over `row`
+  - `rowCount` over `rows`
