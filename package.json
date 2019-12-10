@@ -13,6 +13,7 @@
     "auto-bind": "^2.1.0",
     "fs-extra": "^8.1.0",
     "lib": "file:lib",
+    "lodash": "^4.17.15",
     "lodash.orderby": "^4.6.0",
     "mkdirp": "^0.5.1",
     "moment": "^2.24.0",
