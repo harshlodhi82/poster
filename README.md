@@ -6,9 +6,9 @@ Test framework is `tape`. See documentation https://www.npmjs.com/package/tape#t
 ```
 npm test
 ```
-or 
+or just one file
 ```
-npm test libExample
+npm test getImages
 ```
 
 Do not turn off of modify tests to make them pass (unless the test is incorrect). If a test is incorrect or has a bug, let me know.
@@ -26,7 +26,7 @@ lib
   libThree
 ```
 
-See example inside /lib/exampleLib. Keep all your files in a single lib. Use subfiles and subfolders if needed.
+See example inside /lib/getImages. Keep all your files in a single lib. Use subfiles and subfolders if needed.
 
 ## Logging
 
