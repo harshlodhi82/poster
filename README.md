@@ -47,6 +47,7 @@ Do not add unececessary npm modules. If the function needed is small, copy it in
 
 ## Style
 
+- No commented out code in pull requests
 - Always use async await over callbacks/.then
 - Always use const/let over var
 - Awalys use arrow functions

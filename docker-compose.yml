@@ -2,7 +2,7 @@ version: '3.3'
 
 services:
   node:
-    image: node:latest
+    image: buildkite/puppeteer:latest
     volumes:
       - ./:/usr/src/service/node
       - node-node_modules:/usr/src/service/node/node_modules
