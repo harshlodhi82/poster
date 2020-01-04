@@ -1,13 +1,13 @@
 version: '3.3'
 
 services:
-  node:
+  poster:
     image: buildkite/puppeteer:latest
     volumes:
       - ./:/usr/src/service/node
-      - node-node_modules:/usr/src/service/node/node_modules
+      - poster-node_modules:/usr/src/service/node/node_modules
       - /dev/null:/usr/src/service/node/docker-compose.yml
     working_dir: /usr/src/service/node
 
 volumes:
-  node-node_modules:
+  poster-node_modules:

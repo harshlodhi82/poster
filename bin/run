@@ -3,5 +3,4 @@
 docker-compose \
   run \
   --rm \
-  -T \
-  node "$@"
+  -e DEBUG=proxy poster "$@"
