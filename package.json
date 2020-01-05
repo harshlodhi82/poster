@@ -8,7 +8,8 @@
     "jest": "jest",
     "test": "npm run lint && jest --testNamePattern '^(?!tag:slow)'",
     "test:slow": "npm run lint && jest",
-    "test:name": "npm run lint && jest --testNamePattern"
+    "test:name": "npm run lint && jest --testNamePattern",
+    "test:flaky": "npm run lint && bin/test-flaky"
   },
   "dependencies": {
     "@elastic/elasticsearch": "^7.5.0",
@@ -26,6 +27,9 @@
     "mkdirp": "^0.5.1",
     "moment": "^2.24.0",
     "node-fetch": "^2.6.0",
+    "p-retry": "^4.2.0",
+    "p-timeout": "^3.2.0",
+    "p-wait-for": "^3.1.0",
     "puppeteer": "^2.0.0",
     "secret": "file:secret",
     "winston": "^3.2.1",

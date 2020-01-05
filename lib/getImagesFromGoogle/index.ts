@@ -1,20 +1,22 @@
 import puppeteer from 'puppeteer'
 import log from 'lib/utils/logger'
 
-const getImagesFromGoogle = async (option) => {
+interface ProxySettings {
+  host: string
+  username?: string
+  password?: string
+}
+
+const getImagesFromGoogle = async (options: {keyword: string; proxy?: ProxySettings}): Promise<string[]> => {
   let browser
   try {
-    if (!option || typeof option !== 'object' || typeof option.keyword === 'undefined' || option.keyword.trim().length === 0) {
-      throw new Error('Empty keyword')
-    }
-
-    const encoded_keyword = encodeURI(option.keyword)
+    const encoded_keyword = encodeURI(options.keyword)
 
     let proxy_url
 
-    if (option.proxy && typeof option.proxy.proxy !== 'undefined') {
-      let host = option.proxy.proxy.split(':')[0]
-      const port = option.proxy.proxy.split(':')[1] || 80
+    if (options.proxy && typeof options.proxy.host !== 'undefined') {
+      let host = options.proxy.host.split(':')[0]
+      const port = options.proxy.host.split(':')[1] || 80
       proxy_url = `${host}:${port}`
       browser = await puppeteer.launch({
         headless: true,
@@ -30,10 +32,10 @@ const getImagesFromGoogle = async (option) => {
 
     let page = await browser.newPage()
 
-    if (option.proxy && typeof option.proxy.proxy !== 'undefined' && option.proxy.proxyUsername) {
+    if (options.proxy && typeof options.proxy.host !== 'undefined' && options.proxy.username) {
       await page.authenticate({
-        username: option.proxy.proxyUsername,
-        password: option.proxy.proxyPassword
+        username: options.proxy.username,
+        password: options.proxy.password
       })
     }
 
@@ -67,10 +69,6 @@ const getImagesFromGoogle = async (option) => {
     return imageLinks
   }
   catch (err) {
-    // Catch and display errors
-    if (err.message === 'Empty keyword') {
-      throw new Error('Empty keyword')
-    }
     log.info(err)
     await browser.close()
     log.info('Browser Closed')

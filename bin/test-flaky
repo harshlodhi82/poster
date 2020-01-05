@@ -2,7 +2,9 @@
 
 working_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/.." && cd "$working_dir" || exit
 
-docker-compose \
-  run \
-  --rm \
-  -e DEBUG="$DEBUG" poster "$@"
+for i in {1..5} ; do
+  echo "test $i of 5"
+  npm run jest "$@" || exit
+done
+
+echo "success 5 out of 5"

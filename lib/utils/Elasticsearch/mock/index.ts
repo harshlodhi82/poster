@@ -1,5 +1,4 @@
 import log from 'lib/utils/logger'
-import {sleep, isNumber} from 'lib/utils'
 import orderBy from 'lodash.orderby'
 import moment from 'moment'
 
@@ -175,5 +174,10 @@ const convertElasticsearchSortToLoDashOrderBy = (sortArray) => {
   const directions = sortArray.map(item => item.split(':')[1])
   return [props, directions]
 }
+
+const isNumber = (number) =>
+  typeof number === 'number' || (typeof number === 'string' && !isNaN(Number(number)))
+
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 
 export default ({index}) => new Elasticsearch({index})

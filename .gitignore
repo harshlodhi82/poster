@@ -7,3 +7,4 @@ output/
 secret/
 reports/
 data/
+.eslintcache
