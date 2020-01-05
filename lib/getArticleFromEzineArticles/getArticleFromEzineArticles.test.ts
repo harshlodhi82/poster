@@ -27,16 +27,14 @@ describe('with bad proxy', () => {
   beforeAll(async () => {
     proxy = await ProxyServer({
       username: 'test',
-      password: 'testPass'
-      // dropRate: 0.5,
-      // throttleRate: 0.5
+      password: 'testPass',
+      dropRate: 0.5,
+      throttleRate: 0.5
     })
     proxy.on('proxyrequest', onProxyRequestMock)
   })
   afterAll(async () => {
     await proxy.close()
-    // make sure proxy was used
-    expect(onProxyRequestMock.mock.calls.length).toBeGreaterThan(1)
   })
   test('getArticleFromEzineArticles 3 red flowers', async () => {
     const keyword = '3 red flowers'
@@ -48,6 +46,9 @@ describe('with bad proxy', () => {
         password: proxy.password
       }})
     testArticle({article, excludeArticleIds})
+  })
+  test('proxy was used', () => {
+    expect(onProxyRequestMock).toHaveBeenCalled()
   })
 })
 
@@ -64,11 +65,16 @@ test('getArticleFromEzineArticles fastest computer 2019', async () => {
 })
 
 const testArticle = ({article, excludeArticleIds = new Set()}) => {
-  const {articleTitle, articleContent, articleId} = article
-  expect(typeof articleTitle === 'string').toBeTruthy()
-  expect(articleTitle && articleTitle.length > 20).toBeTruthy()
-  expect(typeof articleContent === 'string').toBeTruthy()
-  expect(articleContent && articleContent.length > 100).toBeTruthy()
-  expect(articleId && typeof articleId === 'string').toBeTruthy()
-  expect(excludeArticleIds.has(articleId)).toBeFalsy()
+  expect(typeof article.title).toBe('string')
+  expect(article.title.length).toBeGreaterThan(20)
+  expect(typeof article.content).toBe('string')
+  expect(article.content.length).toBeGreaterThan(100)
+  expect(typeof article.id).toBe('string')
+  expect(excludeArticleIds.has(article.id)).toBeFalsy()
 }
+
+describe('invalid args', () => {
+  test(`throws empty keyword`, async () => {
+    await expect(getArticleFromEzineArticles({keyword: ''})).rejects.toThrow()
+  })
+})

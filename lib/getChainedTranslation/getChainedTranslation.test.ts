@@ -1,11 +1,5 @@
 import getChainedTranslation from './index'
-
-let proxy
-try {
-  const {proxy: proxyHost, proxyUsername, proxyPassword} = require('secret/proxy')
-  proxy = {proxy: proxyHost, proxyUsername, proxyPassword}
-}
-catch (e) {}
+import ProxyServer from 'lib/utils/ProxyServer'
 
 const originalText = `Life being what it is will always demand sacrifices from us and in truth, making such sacrifices is one of those things that make us retain all the vestiges of humanity in us even when the natural tendency is to be bestial even if for a little while.
 
@@ -18,77 +12,67 @@ Trust is one of the fundamental virtues of human life that we just cannot do wit
 The way I see it, we must always trust in people whether or not we are going to get that trust held in high esteem. It reminds me of the enigma of love and of the possible implications of love that is unrequited. The possibilities are endless if we can all learn to trust one another and if those of us who are seen as worthy of another's trust do our best to remain true to that trust. So even if you have had bitter experiences, do not be afraid to try again!`
 
 test('getChainedTranslation 3 languages', async () => {
-  const languages = [
-    'es',
-    'fr',
-    'en'
-  ]
-  const chainedTanslation = await getChainedTranslation({
-    proxy,
-    languages,
-    text: originalText
-  })
+  const languages = ['es', 'fr', 'en']
+  const chainedTanslation = await getChainedTranslation({languages, text: originalText})
   expect(typeof chainedTanslation === 'string').toBeTruthy()
   expect(chainedTanslation && chainedTanslation.length > 100).toBeTruthy()
+})
+
+describe('with bad proxy', () => {
+  /* this test emulates a connection using a bad proxy
+  the connection drops 50% of the time.
+  use DEBUG=proxy env to see what the proxy does */
+  let proxy
+  const onProxyRequestMock = jest.fn()
+  beforeAll(async () => {
+    proxy = await ProxyServer({
+      username: 'test',
+      password: 'testPass',
+      dropRate: 0.5,
+      throttleRate: 0.5
+    })
+    proxy.on('proxyrequest', onProxyRequestMock)
+  })
+  afterAll(async () => {
+    await proxy.close()
+  })
+  test('getChainedTranslation 3 languages', async () => {
+    const languages = ['es', 'fr', 'en']
+    const chainedTanslation = await getChainedTranslation({
+      languages,
+      text: originalText,
+      proxy: {
+        host: proxy.host,
+        username: proxy.username,
+        password: proxy.password
+      }
+    })
+    expect(typeof chainedTanslation === 'string').toBeTruthy()
+    expect(chainedTanslation && chainedTanslation.length > 100).toBeTruthy()
+  })
+  test('proxy was used', () => {
+    expect(onProxyRequestMock).toHaveBeenCalled()
+  })
 })
 
 test('getChainedTranslation 6 languages', async () => {
-  const languages = [
-    'es',
-    'fr',
-    'en',
-    'th',
-    'th',
-    'en'
-  ]
-  const chainedTanslation = await getChainedTranslation({
-    proxy,
-    languages,
-    text: originalText
-  })
+  const languages = ['es', 'fr', 'en', 'th', 'th', 'en']
+  const chainedTanslation = await getChainedTranslation({languages, text: originalText})
   expect(typeof chainedTanslation === 'string').toBeTruthy()
   expect(chainedTanslation && chainedTanslation.length > 100).toBeTruthy()
 })
 
-test('getChainedTranslation invalid args', async done => {
-  try {
-    await getChainedTranslation({
-      proxy,
+describe('invalid args', () => {
+  test(`throws 0 languages`, async () => {
+    await expect(getChainedTranslation({
       languages: [],
       text: originalText
-    })
-    done.fail(`didn't throw 0 languages`)
-  }
-  catch (e) {}
-
-  try {
-    await getChainedTranslation({
-      proxy,
-      languages: undefined,
-      text: originalText
-    })
-    done.fail(`didn't throw undefined languages`)
-  }
-  catch (e) {}
-
-  try {
-    await getChainedTranslation({
-      proxy,
-      languages: ['es', 'en'],
-      text: undefined
-    })
-    done.fail(`didn't throw undefined text`)
-  }
-  catch (e) {}
-
-  try {
-    await getChainedTranslation({
-      proxy,
+    })).rejects.toThrow()
+  })
+  test(`throws empty text`, async () => {
+    await expect(getChainedTranslation({
       languages: ['es', 'en'],
       text: ''
-    })
-    done.fail(`didn't throw empty text`)
-  }
-  catch (e) {}
-  done()
+    })).rejects.toThrow()
+  })
 })

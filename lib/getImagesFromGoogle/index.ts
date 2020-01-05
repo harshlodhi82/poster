@@ -7,7 +7,18 @@ interface ProxySettings {
   password?: string
 }
 
-const getImagesFromGoogle = async (options: {keyword: string; proxy?: ProxySettings}): Promise<string[]> => {
+interface GetImagesFromGoogle {
+  (getImagesFromGoogleSettings: {
+    keyword: string,
+    proxy?: ProxySettings
+  }): Promise<string[]>
+}
+
+const getImagesFromGoogle: GetImagesFromGoogle = async (options) => {
+  if (options.keyword.trim().length === 0) {
+    throw new Error('empty keyword')
+  }
+
   let browser
   try {
     const encoded_keyword = encodeURI(options.keyword)

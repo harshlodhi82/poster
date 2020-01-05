@@ -10,17 +10,25 @@ interface ProxySettings {
 
 interface Article {
   id: string
-  title?: string
-  content?: string
+  title: string
+  content: string
 }
 
-const getArticleFromEzineArticles = async (options: {
-  keyword: string,
-  proxy?: ProxySettings,
-  excludeArticleIds?: Set<string>
-}): Promise<Article> => {
+interface GetArticleFromEzineArticles {
+  (getArticleFromEzineArticlesSettings: {
+    keyword: string,
+    excludeArticleIds?: Set<string>,
+    proxy?: ProxySettings
+  }): Promise<Article>
+}
+
+const getArticleFromEzineArticles: GetArticleFromEzineArticles = async (options) => {
   // must search on google `site:ezinearticles.com ${keyword}`
   // do NOT use ezinearticles search
+  if (options.keyword.trim().length === 0) {
+    throw new Error('empty keyword')
+  }
+
   let browser
   try {
     const encodedKeyword = encodeURI(options.keyword)
@@ -80,6 +88,7 @@ const getArticleFromEzineArticles = async (options: {
     const articles_links = options.excludeArticleIds ? _.reject(articles_data, (v) => !v.id || _.includes(Array.from(options.excludeArticleIds), v.id)) : articles_data
 
     const articles = await getArticle(articles_links[0].url, options.proxy)
+    log.info(articles)
 
     return articles
   }
@@ -131,10 +140,10 @@ const getArticle = async (link, proxy) => {
 
       const data = {
         // @ts-ignore
-        articleContent: articleContentNodes[0].innerText,
+        content: articleContentNodes[0].innerText,
         // @ts-ignore
-        articleTitle: articleTitleNodes[0].innerText,
-        articleId: document.location.href.split('&id=')[1]
+        title: articleTitleNodes[0].innerText,
+        id: document.location.href.split('&id=')[1]
       }
       return data
     })

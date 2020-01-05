@@ -28,8 +28,6 @@ describe('with bad proxy', () => {
   })
   afterAll(async () => {
     await proxy.close()
-    // make sure proxy was used
-    expect(onProxyRequestMock.mock.calls.length).toBeGreaterThan(1)
   })
   test('getImagesFromGoogle 3 red flowers', async () => {
     const keyword = '3 red flowers'
@@ -44,5 +42,14 @@ describe('with bad proxy', () => {
     for (const image of images) {
       expect(typeof image === 'string').toBeTruthy()
     }
+  })
+  test('proxy was used', () => {
+    expect(onProxyRequestMock).toHaveBeenCalled()
+  })
+})
+
+describe('invalid args', () => {
+  test(`throws empty keyword`, async () => {
+    await expect(getImagesFromGoogle({keyword: ''})).rejects.toThrow()
   })
 })
