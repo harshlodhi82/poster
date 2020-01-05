@@ -1,6 +1,6 @@
 ## Tests
 
-Test framework is `tape`. See documentation https://www.npmjs.com/package/tape#tplann
+Test framework is `jest`. See documentation https://www.npmjs.com/package/jest
 
 ## Running tests
 ```
@@ -10,36 +10,21 @@ or just one file
 ```
 npm test getImages
 ```
+in docker
+```
+bin/run npm test getImages
+```
 
 Do not turn off of modify tests to make them pass (unless the test is incorrect). If a test is incorrect or has a bug, let me know.
 
-## How to organize files
-
+For the task to be complete it must pass the flaky test suite
 ```
-lib
-  libOne
-    index.js
-    libOne.test.js
-    utils.js
-    utils.test.js
-  libTwo
-  libThree
+npm run test:flaky getImages
 ```
 
-See example inside /lib/getImages. Keep all your files in a single lib. Use subfiles and subfolders if needed.
+## Linting & typescript
 
-## Logging
-
-Do not use console.log, use
-
-```
-const log = require('lib/utils/logger')
-log.info('hello')
-```
-
-## Linting
-
-Do not disable linting or change rules. Can add `// eslint-disable-next-line` when no other option.
+Do not disable linting or change eslint/typescript rules. Can add `// eslint-disable-next-line` or `// @ts-ignore` when needed.
 
 ## Dependencies
 
@@ -52,9 +37,9 @@ Do not add unececessary npm modules. If the function needed is small, copy it in
 - Always use const/let over var
 - Awalys use arrow functions
 - Always use destructuring, e.g.:
-	- `const saveAccountToFile = ({username, age, location, firstName, lastName} = {}) => {...}`
-	- `function send({message, recipient, sender} = {}) {...}`
-	- `const {username, password} = account`
+  - `const saveAccountToFile = ({username, age, location, firstName, lastName} = {}) => {...}`
+  - `function send({message, recipient, sender} = {}) {...}`
+  - `const {username, password} = account`
 - Do not use more than 2 arguments in a function, use a destructured object instead
 - Keep functions small, pure, and make them do 1 thing
 - Name functions and variables very descriptively, e.g.:
@@ -63,3 +48,16 @@ Do not add unececessary npm modules. If the function needed is small, copy it in
   - `accountId` over `id`
   - `rowIndex` over `row`
   - `rowCount` over `rows`
+
+## Logging
+
+Do not use console.log, use
+
+```
+const log = require('lib/utils/logger')
+log.info('hello')
+```
+
+## How to organize files
+
+If code gets too big in one file, split it into 2 files inside the same folder. Do not create more folders or files outside the folder.

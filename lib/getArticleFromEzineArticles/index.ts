@@ -2,21 +2,34 @@ import log from 'lib/utils/logger'
 import puppeteer from 'puppeteer'
 import _ from 'lodash'
 
-const getArticleFromEzineArticles = async (option) => {
+interface ProxySettings {
+  host: string
+  username?: string
+  password?: string
+}
+
+interface Article {
+  id: string
+  title?: string
+  content?: string
+}
+
+const getArticleFromEzineArticles = async (options: {
+  keyword: string,
+  proxy?: ProxySettings,
+  excludeArticleIds?: Set<string>
+}): Promise<Article> => {
   // must search on google `site:ezinearticles.com ${keyword}`
   // do NOT use ezinearticles search
   let browser
   try {
-    if (!option || typeof option !== 'object' || typeof option.keyword === 'undefined' || option.keyword.trim().length === 0) {
-      throw new Error('Empty keyword')
-    }
-    const encodedKeyword = encodeURI(option.keyword)
+    const encodedKeyword = encodeURI(options.keyword)
 
     let proxy_url
 
-    if (option.proxy && typeof option.proxy.proxy !== 'undefined') {
-      let host = option.proxy.proxy.split(':')[0]
-      const port = option.proxy.proxy.split(':')[1] || 80
+    if (options.proxy && typeof options.proxy.host !== 'undefined') {
+      let host = options.proxy.host.split(':')[0]
+      const port = options.proxy.host.split(':')[1] || 80
       proxy_url = `${host}:${port}`
       browser = await puppeteer.launch({
         headless: true,
@@ -32,10 +45,10 @@ const getArticleFromEzineArticles = async (option) => {
 
     let page = await browser.newPage()
 
-    if (option.proxy && typeof option.proxy.proxy !== 'undefined' && option.proxy.proxyUsername) {
+    if (options.proxy && typeof options.proxy.host !== 'undefined' && options.proxy.username) {
       await page.authenticate({
-        username: option.proxy.proxyUsername,
-        password: option.proxy.proxyPassword
+        username: options.proxy.username,
+        password: options.proxy.password
       })
     }
 
@@ -52,7 +65,9 @@ const getArticleFromEzineArticles = async (option) => {
 
       for (let i = 0; i < articleLinkNodes.length; i++) {
         data[i] = {
+          // @ts-ignore
           url: articleLinkNodes[i].href,
+          // @ts-ignore
           id: articleLinkNodes[i].href.split('&id=')[1]
         }
       }
@@ -62,16 +77,13 @@ const getArticleFromEzineArticles = async (option) => {
 
     await browser.close()
 
-    const articles_links = option.excludeArticleIds ? _.reject(articles_data, (v) => !v.id || _.includes(Array.from(option.excludeArticleIds), v.id)) : articles_data
+    const articles_links = options.excludeArticleIds ? _.reject(articles_data, (v) => !v.id || _.includes(Array.from(options.excludeArticleIds), v.id)) : articles_data
 
-    const articles = await getArticle(articles_links[0].url, option.proxy)
+    const articles = await getArticle(articles_links[0].url, options.proxy)
 
     return articles
   }
   catch (err) {
-    if (err.message === 'Empty keyword') {
-      throw new Error('Empty keyword')
-    }
     log.info(err)
     await browser.close()
     log.info('Browser Closed')
@@ -83,9 +95,9 @@ const getArticle = async (link, proxy) => {
   try {
     let proxy_url
 
-    if (proxy && typeof proxy.proxy !== 'undefined') {
-      let host = proxy.proxy.split(':')[0]
-      const port = proxy.proxy.split(':')[1] || 80
+    if (proxy && typeof proxy.host !== 'undefined') {
+      let host = proxy.host.split(':')[0]
+      const port = proxy.host.split(':')[1] || 80
       proxy_url = `${host}:${port}`
       browser = await puppeteer.launch({
         headless: true,
@@ -101,10 +113,10 @@ const getArticle = async (link, proxy) => {
 
     let page = await browser.newPage()
 
-    if (proxy && typeof proxy.proxy !== 'undefined' && proxy.proxyUsername) {
+    if (proxy && typeof proxy.host !== 'undefined' && proxy.username) {
       await page.authenticate({
-        username: proxy.proxyUsername,
-        password: proxy.proxyPassword
+        username: proxy.username,
+        password: proxy.password
       })
     }
     await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3419.0 Safari/537.36')
@@ -118,7 +130,9 @@ const getArticle = async (link, proxy) => {
       const articleTitleNodes = document.querySelectorAll('#article-title')
 
       const data = {
+        // @ts-ignore
         articleContent: articleContentNodes[0].innerText,
+        // @ts-ignore
         articleTitle: articleTitleNodes[0].innerText,
         articleId: document.location.href.split('&id=')[1]
       }
