@@ -1,0 +1,43 @@
+version: '3.3'
+
+# admin:password
+
+services:
+  wordpress:
+    depends_on:
+      - db
+    build:
+      context: wordpress/
+    volumes:
+      # php.ini extra config
+      - ./wordpress/config/php.ini:/usr/local/etc/php/conf.d/wp-multisite-php.ini
+      - ./wordpress/files:/var/www/html
+
+    ports:
+      - "80:80"
+    restart: always
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: password
+
+  db:
+    build:
+      context: mysql/
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wordpress
+      MYSQL_PASSWORD: password
+    volumes:
+      - ./mysql/db:/var/lib/mysql
+      - ./mysql/config/my.cnf:/etc/my.cnf
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    restart: always
+    ports:
+      - "9001:80"
+    environment:
+      MYSQL_USERNAME: wordpress # can also use root for higher privileges
+      MYSQL_ROOT_PASSWORD: password

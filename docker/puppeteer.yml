@@ -1,0 +1,12 @@
+version: '3.3'
+
+services:
+  poster:
+    image: buildkite/puppeteer:latest
+    volumes:
+      - ../poster:/usr/src/service/node
+      - poster-node_modules:/usr/src/service/node/node_modules
+    working_dir: /usr/src/service/node
+
+volumes:
+  poster-node_modules:

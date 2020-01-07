@@ -3,6 +3,7 @@
 working_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/.." && cd "$working_dir" || exit
 
 docker-compose \
+	-f ./docker/puppeteer.yml \
   run \
   --rm \
   -e DEBUG="$DEBUG" poster "$@"

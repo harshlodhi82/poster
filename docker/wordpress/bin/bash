@@ -1,0 +1,5 @@
+#!/bin/bash
+
+wp_container=`docker container ls | grep wordpress | cut -d " " -f 1`
+echo "getting bash for container $wp_container"
+docker container exec -it $wp_container bash

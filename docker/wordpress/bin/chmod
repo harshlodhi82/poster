@@ -1,0 +1,6 @@
+#!/bin/bash
+
+wp_container=`docker container ls | grep wordpress | cut -d " " -f 1`
+echo "getting terminal for container $wp_container"
+docker container exec -it $wp_container chown www-data -R `ls files -a`
+docker container exec -it $wp_container chgrp www-data -R `ls files -a`

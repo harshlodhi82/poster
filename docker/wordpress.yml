@@ -1,0 +1,36 @@
+version: '3.3'
+
+# wordpress user credentials -> admin:password
+
+services:
+  wordpress:
+    container_name: wordpress-test
+    depends_on:
+      - db
+    build:
+      context: wordpress/wordpress/
+    volumes:
+      # php.ini extra config
+      - ./wordpress/wordpress/config/php.ini:/usr/local/etc/php/conf.d/wp-multisite-php.ini
+
+    ports:
+      - '80:80'
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: password
+
+  db:
+    build:
+      context: wordpress/mysql/
+    volumes:
+      - ./wordpress/mysql/config/my.cnf:/etc/my.cnf
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wordpress
+      MYSQL_PASSWORD: password
+
+  poster:
+    depends_on:
+      - wordpress
