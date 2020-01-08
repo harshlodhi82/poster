@@ -1,4 +1,4 @@
-Files are in /poster/lib
+## Files are in `poster/lib/`
 
 ## Tests
 
@@ -6,22 +6,25 @@ Test framework is `jest`. See documentation https://www.npmjs.com/package/jest
 
 ## Running tests
 ```
+cd poster
 npm test
 ```
-or just one file
+or just one file (replace fileName with the file name)
 ```
-npm test getImages
+cd poster
+npm test fileName
 ```
 in docker
 ```
-bin/run npm test getImages
+bin/run npm test fileName
 ```
 
 Do not turn off of modify tests to make them pass (unless the test is incorrect). If a test is incorrect or has a bug, let me know.
 
 For the task to be complete it must pass the flaky test suite
 ```
-npm run test:flaky getImages
+cd poster
+npm run test:flaky fileName
 ```
 
 ## Linting & typescript
@@ -50,13 +53,14 @@ Do not add unececessary npm modules. If the function needed is small, copy it in
   - `accountId` over `id`
   - `rowIndex` over `row`
   - `rowCount` over `rows`
+- use `import` over `require`
 
 ## Logging
 
 Do not use console.log, use
 
 ```
-const log = require('lib/utils/logger')
+import log from 'lib/utils/logger'
 log.info('hello')
 ```
 
