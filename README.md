@@ -1,3 +1,5 @@
+Files are in /poster/lib
+
 ## Tests
 
 Test framework is `jest`. See documentation https://www.npmjs.com/package/jest
