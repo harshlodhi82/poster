@@ -1,5 +1,9 @@
 ## Files are in `poster/lib/`
-
+#### Install
+```
+cd poster
+npm install
+```
 ## Tests
 
 Test framework is `jest`. See documentation https://www.npmjs.com/package/jest
