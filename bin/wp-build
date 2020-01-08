@@ -5,4 +5,4 @@ working_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/.." && cd "$working_d
 docker-compose \
   -f ./docker/wordpress.yml \
   -f ./docker/puppeteer.yml \
-  build --no-cache
+  build # --no-cache
