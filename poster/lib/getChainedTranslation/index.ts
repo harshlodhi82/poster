@@ -14,8 +14,9 @@ interface GetChainedTranslation {
   }): Promise<string>
 }
 
+// eslint-disable-next-line require-await
 const getChainedTranslation: GetChainedTranslation = async ({text, languages, proxy}) => {
-  
+  return ''
 }
 
 export default getChainedTranslation
