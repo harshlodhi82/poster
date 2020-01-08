@@ -7,7 +7,7 @@ log.info('this is my message')
 
 import autoBind from 'auto-bind'
 import path from 'path'
-import paths from 'lib/core/paths'
+import paths from 'lib/utils/paths'
 import winston from 'winston'
 import {
   getNextLogLine,

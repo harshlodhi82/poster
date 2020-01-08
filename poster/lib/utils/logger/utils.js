@@ -1,4 +1,4 @@
-import paths from 'lib/core/paths'
+import paths from 'lib/utils/paths'
 
 const getColor = (namespace) => {
   require('supports-color')
