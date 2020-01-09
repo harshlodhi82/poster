@@ -11,7 +11,8 @@ test('createPost', async () => {
     imageUrls: ['1', '2'],
     title: 'title',
     content: 'content',
-    category: 'category'
+    categories: ['category']
   }
   await wordpress.createPost(settings)
+  throw Error('TODO')
 })

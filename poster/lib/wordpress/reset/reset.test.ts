@@ -8,4 +8,5 @@ test('reset', async () => {
   }
   Object.freeze(wordpress)
   await wordpress.reset()
+  throw Error('TODO')
 })

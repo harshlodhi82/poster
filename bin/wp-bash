@@ -2,6 +2,8 @@
 
 working_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/.." && cd "$working_dir" || exit
 
+docker rm -f wordpress-test wordpress-mysql-test poster-wordpress-test &> /dev/null
+
 docker-compose \
   -f ./docker/wordpress.yml \
   -f ./docker/puppeteer.yml \
@@ -11,4 +13,5 @@ docker-compose \
   -f ./docker/wordpress.yml \
   -f ./docker/puppeteer.yml \
   run --rm \
+  --name poster-wordpress-test \
   poster /bin/bash

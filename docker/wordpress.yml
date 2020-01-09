@@ -13,14 +13,13 @@ services:
       # php.ini extra config
       - ./wordpress/wordpress/config/php.ini:/usr/local/etc/php/conf.d/wp-multisite-php.ini
 
-    ports:
-      - '80:80'
     environment:
       WORDPRESS_DB_HOST: db:3306
       WORDPRESS_DB_USER: wordpress
       WORDPRESS_DB_PASSWORD: password
 
   db:
+    container_name: wordpress-mysql-test
     build:
       context: wordpress/mysql/
     volumes:
@@ -32,5 +31,6 @@ services:
       MYSQL_PASSWORD: password
 
   poster:
+    container_name: poster-wordpress-test
     depends_on:
       - wordpress

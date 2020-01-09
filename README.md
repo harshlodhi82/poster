@@ -1,5 +1,5 @@
 ## Files are in `poster/lib/`
-#### Install
+#### Install (tested with node version 12)
 ```
 cd poster
 npm install
@@ -20,6 +20,7 @@ npm test fileName
 ```
 in docker
 ```
+bin/run npm install
 bin/run npm test fileName
 ```
 
@@ -71,3 +72,15 @@ log.info('hello')
 ## How to organize files
 
 If code gets too big in one file, split it into 2 files inside the same folder. Do not create more folders or files outside the folder.
+
+## Wordpress tests
+
+Must have docker running:
+```
+bin/wp-bash
+```
+This will build wordpress images and give a shell inside the container with a wordpress site at url `http://wordpress-test/site-1/` (only accessible inside the container)
+```
+npm install
+npm test wordpress
+```

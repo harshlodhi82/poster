@@ -1,4 +1,5 @@
 import log from 'lib/utils/logger'
+import WPAPI from 'wpapi'
 
 interface Reset {
   (): Promise<void>
