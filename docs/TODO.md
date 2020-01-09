@@ -6,12 +6,12 @@ wordpress.createPost
 add tests to both
 
 ### contentGetter
-make contentGetter.getChainedTranslation
-reduce flakiness from getArticleFromEzineArticles
-reduce flakiness from getImagesFromGoogle
+make contentGetter.getChainedTranslation (in progress)
+reduce flakiness from getArticleFromEzineArticles (in progress)
+reduce flakiness from getImagesFromGoogle (in progress)
 
 ### siteManager
-make test siteManager.getPostsToDoFromSiteSettings
+make test siteManager.getPostsToDoFromSiteSettings (in progress)
 make siteManager.getSettingsFromGoogleSheets
 
 ## me
