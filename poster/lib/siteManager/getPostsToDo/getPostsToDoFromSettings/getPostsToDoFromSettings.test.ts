@@ -6,8 +6,12 @@ test('getPostsToDoFromSettings', async () => {
     sites: fixtures.sites,
     sitesSettings: fixtures.sitesSettings
   }
-  await getPostsToDoFromSettings(settings)
-  throw Error('TODO')
+  const postsToDo = await getPostsToDoFromSettings(settings)
+  expect(postsToDo).toHaveLength(3)
+  for (const post of postsToDo) {
+    expect(post.site).toBeTruthy()
+    expect(post.keyword).toBeTruthy()
+  }
 })
 
 test('should throw when site settings matches multiple sites', async () => {
