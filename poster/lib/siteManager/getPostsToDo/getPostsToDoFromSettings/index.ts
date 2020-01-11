@@ -10,14 +10,25 @@ interface GetPostsToDoFromSettings {
 
 // eslint-disable-next-line require-await
 const getPostsToDoFromSettings: GetPostsToDoFromSettings = async ({sites, sitesSettings}) => {
-  /* algorithm
-    1. find which site goes with which sitesSettings (sitesSettings.s is the first few letters of sites)
-    2. find a random  keyword from the keywords array
-    3. return all the matched PostToDos, do not return if no match
-    4. should throw an error if sitesSettings.s can match multisite sites
-  */
+  let postToDoArray = []
+  sitesSettings.forEach(elementOfSiteSettings => {
+    let numberOfCoincidences = 0
+    sites.forEach(site => {
+      if (site.includes(elementOfSiteSettings.s) === true) {
+        numberOfCoincidences = numberOfCoincidences + 1
+        let randomKeywordNumber = Math.floor(Math.random() * elementOfSiteSettings.keywords.length)
+        let randomKeywordFromArray = elementOfSiteSettings.keywords[randomKeywordNumber]
+        let matchedSiteWithKeyword = {keyword: randomKeywordFromArray, site: site}
+        postToDoArray.push(matchedSiteWithKeyword)
+      }
+    })
+    if (numberOfCoincidences > 1 && numberOfCoincidences !== 0) {
+      throw new Error('ERROR!')
+    }
+  })
+
   log.info({sites, sitesSettings})
-  return [{keyword: '', site: ''}, {keyword: '', site: ''}, {keyword: '', site: ''}]
+  return postToDoArray
 }
 
 export default getPostsToDoFromSettings
