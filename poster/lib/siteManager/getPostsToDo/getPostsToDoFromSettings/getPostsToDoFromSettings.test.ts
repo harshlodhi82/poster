@@ -14,10 +14,10 @@ test('getPostsToDoFromSettings', async () => {
   }
 })
 
-test('should throw when site settings matches multiple sites', async () => {
+test('should throw when site settings matches multiple sites', () => {
   const settings = {
     sites: ['blue-cat', 'blue-bird'],
     sitesSettings: [{s: 'blue', keywords: ['keyword']}]
   }
-  await expect(getPostsToDoFromSettings(settings)).rejects.toThrow()
+  expect(() => getPostsToDoFromSettings(settings)).toThrow()
 })

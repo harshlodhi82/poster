@@ -5,10 +5,10 @@ interface GetPostsToDoFromSettings {
   (settings: {
     sites: string[],
     sitesSettings: SiteSettings[]
-  }): Promise<PostToDo[]>
+  }): PostToDo[]
 }
 
-const getPostsToDoFromSettings: GetPostsToDoFromSettings = async ({sites, sitesSettings}) => {
+const getPostsToDoFromSettings: GetPostsToDoFromSettings = ({sites, sitesSettings}) => {
   let postToDoArray = []
   sitesSettings.forEach(elementOfSiteSettings => {
     let numberOfCoincidences = 0

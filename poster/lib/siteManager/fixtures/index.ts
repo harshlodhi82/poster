@@ -1,4 +1,3 @@
-import wordpressCredentials from 'lib/wordpress/fixtures/credentials'
 import {Sites, SitesSettings} from '../interfaces'
 
 const sites: Sites = [
@@ -26,7 +25,7 @@ const sitesSettings: SitesSettings = [
 
 const fixtures = {
   GOOGLE_SHEETS_URL: 'https://docs.google.com/spreadsheets/d/1B8yq64Ba4WIMwD9LCPJ-1g6qfXwp9yL8WjmZ1bG2tSc',
-  WORDPRESS_URL: wordpressCredentials.url,
+  WORDPRESS_URL: 'http://wordpress-test/',
   sites,
   sitesSettings
 }
