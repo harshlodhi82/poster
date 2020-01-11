@@ -84,3 +84,7 @@ This will build wordpress images and give a shell inside the container with a wo
 npm install
 npm test wordpress
 ```
+
+## How to submit work
+
+Do not send work in text files in messenger for review. Send a pull request as shown in this video https://www.youtube.com/watch?v=rgbCcBNZcdQ

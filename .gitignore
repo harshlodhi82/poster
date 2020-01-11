@@ -3,3 +3,4 @@ node_modules/
 log/
 data/
 .eslintcache
+package-lock.json
