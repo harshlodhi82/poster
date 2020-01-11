@@ -14,7 +14,7 @@ const getPostsToDoFromSettings: GetPostsToDoFromSettings = async ({sites, sitesS
   sitesSettings.forEach(elementOfSiteSettings => {
     let numberOfCoincidences = 0
     sites.forEach(site => {
-      if (site.includes(elementOfSiteSettings.s) === true) {
+      if (site.startsWith(elementOfSiteSettings.s) === true) {
         numberOfCoincidences = numberOfCoincidences + 1
         let randomKeywordNumber = Math.floor(Math.random() * elementOfSiteSettings.keywords.length)
         let randomKeywordFromArray = elementOfSiteSettings.keywords[randomKeywordNumber]
@@ -23,7 +23,7 @@ const getPostsToDoFromSettings: GetPostsToDoFromSettings = async ({sites, sitesS
       }
     })
     if (numberOfCoincidences > 1 && numberOfCoincidences !== 0) {
-      throw new Error('ERROR!')
+      throw new Error('One of the sites from «sites settings» matches two or more sites')
     }
   })
 
