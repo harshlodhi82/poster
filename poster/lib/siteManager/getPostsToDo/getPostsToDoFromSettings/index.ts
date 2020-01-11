@@ -8,7 +8,6 @@ interface GetPostsToDoFromSettings {
   }): Promise<PostToDo[]>
 }
 
-// eslint-disable-next-line require-await
 const getPostsToDoFromSettings: GetPostsToDoFromSettings = async ({sites, sitesSettings}) => {
   let postToDoArray = []
   sitesSettings.forEach(elementOfSiteSettings => {
@@ -27,7 +26,7 @@ const getPostsToDoFromSettings: GetPostsToDoFromSettings = async ({sites, sitesS
     }
   })
 
-  log.info({sites, sitesSettings})
+  log.info({sites, sitesSettings, postToDoArray})
   return postToDoArray
 }
 

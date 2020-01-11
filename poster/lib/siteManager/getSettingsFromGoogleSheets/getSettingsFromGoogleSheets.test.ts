@@ -14,7 +14,6 @@ test('getSettingsFromGoogleSheets', async () => {
       test: 'test abc',
       'some other prop': '',
       'some json prop': '',
-      // eslint-disable-next-line
       'some multiline prop': multilineCell
     },
     {
