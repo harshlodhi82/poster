@@ -1,0 +1,2 @@
+# do not modify line endings on windows
+docker/wordpress -crlf

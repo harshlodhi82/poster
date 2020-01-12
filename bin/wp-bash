@@ -1,5 +1,7 @@
 #!/bin/bash
 
+export MSYS_NO_PATHCONV=1 # fix windows git bash bug
+
 working_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/.." && cd "$working_dir" || exit
 
 docker rm -f wordpress-test wordpress-mysql-test poster-wordpress-test &> /dev/null
