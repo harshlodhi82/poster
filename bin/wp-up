@@ -2,7 +2,25 @@
 
 working_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/.." && cd "$working_dir" || exit
 
-docker-compose \
+export MSYS_NO_PATHCONV=1 # fix windows git bash bug
+
+extended_docker_compose="
+  version: '3.3'
+  services:
+    wordpress:
+      ports:
+        - 80:80
+"
+
+# debug combined docker compose file
+echo "$extended_docker_compose" | docker-compose \
   -f ./docker/wordpress.yml \
   -f ./docker/puppeteer.yml \
+  -f /dev/stdin \
+  config
+
+echo "$extended_docker_compose" | docker-compose \
+  -f ./docker/wordpress.yml \
+  -f ./docker/puppeteer.yml \
+  -f /dev/stdin \
   up --build
