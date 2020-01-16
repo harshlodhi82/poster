@@ -15,32 +15,24 @@ interface CreatePost {
 const createPost: CreatePost = async function ({title, content, imageUrls, categories}) {
   let data = {title, content, imageUrls, categories}
   const URL = this.url + 'wp-json'
-  var wp = new WPAPI({
+  const wp = new WPAPI({
     endpoint: URL,
     username: this.username,
     password: this.password,
     auth: true
   })
   try {
+    data.content = addImage(data.content, data.imageUrls)
     data.categories = await validatingCategoryIds(wp, data.categories)
-    var imageIds = await uploadImages(wp, data.imageUrls)
+    const imageIds = await uploadImages(wp, data.imageUrls)
+    const post = await wp.posts().create(data)
+    await assignImageToPost(wp, imageIds, post.id)
+    log.info('post:', post)
+    return post
   }
   catch (error) {
     log.info('error: ', error)
   }
-  //* *Creating Post */
-  //* *Resolving post response using promises */
-  return new Promise(async (resolve, reject) => {
-    await wp.posts().create(data).then(async function (response) {
-      let postId = response.id
-      await assignImageToPost(wp, imageIds, postId)
-      log.info('Post:', response)
-      resolve(response)
-    }).catch((error) => {
-      log.info('error: ', error)
-      reject(error)
-    })
-  })
 }
 
 //* *Validating categories */
@@ -81,6 +73,19 @@ const assignImageToPost = async (wp: WPAPI, imageIds: number[], postId): Promise
     const imgId = imageIds[index]
     await wp.media().id(imgId).update({post: postId})
   }
+}
+
+//* *Adding Image to random plac inside content. */
+const addImage = (content:string, images:string[]):string => {
+  let arr = content.split(' ')
+  for (let index = 0; index < images.length; index++) {
+    const img = images[index]
+    const imgTag = `<img src="${img}"/>`
+    const randomNumber = Math.floor(Math.random() * arr.length)
+    arr[randomNumber] = arr[randomNumber].concat(imgTag)
+  }
+  let newContent = arr.join(' ')
+  return newContent
 }
 
 export default createPost
