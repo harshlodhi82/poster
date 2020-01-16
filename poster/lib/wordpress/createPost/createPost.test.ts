@@ -21,7 +21,10 @@ test('createPost', async () => {
     content,
     categories: ['category']
   }
-  const postSlug = await wordpress.createPost(settings)
-  expect(postSlug).toEqual('why-horses-are-great')
-  throw Error('TODO')
+  const response :any = await wordpress.createPost(settings)
+  expect(response.type).toEqual('post')
+  expect(response.title.raw).toEqual(settings.title)
+  expect(response.content.raw).toEqual(settings.content)
+  expect(response.categories.length).toEqual(settings.categories.length)
+  expect(response.generated_slug).toEqual('why-horses-are-great')
 })
