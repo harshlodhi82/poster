@@ -75,3 +75,5 @@ CMD ["apache2-foreground"]
 
 # copy saved wp files
 COPY ./files /var/www/html
+# add permissions to wp files
+RUN chown www-data -R /var/www/html && chgrp www-data -R /var/www/html
