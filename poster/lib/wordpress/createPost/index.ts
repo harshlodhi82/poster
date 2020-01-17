@@ -7,13 +7,14 @@ interface CreatePost {
     title: string,
     content: string,
     imageUrls: string[],
-    categories: string[]
-  }): Promise<void>
+    categories: string[],
+    status: string
+  }): Promise<any>
 }
 
 // eslint-disable-next-line require-await
-const createPost: CreatePost = async function ({title, content, imageUrls, categories}) {
-  let data = {title, content, imageUrls, categories}
+const createPost: CreatePost = async function ({title, content, imageUrls, categories, status}) {
+  let data = {title, content, imageUrls, categories, status}
   const URL = this.url + 'wp-json'
   const wp = new WPAPI({
     endpoint: URL,
@@ -22,13 +23,15 @@ const createPost: CreatePost = async function ({title, content, imageUrls, categ
     auth: true
   })
   try {
-    data.content = addImage(data.content, data.imageUrls)
     data.categories = await validatingCategoryIds(wp, data.categories)
-    const imageIds = await uploadImages(wp, data.imageUrls)
+    const imageData = await uploadImages(wp, data.imageUrls)
+    let imageIds = imageData.imageIds
+    let uploadedUrls = imageData.uploadedUrls
+    data.content = addImage(data.content, uploadedUrls)
     const post = await wp.posts().create(data)
     await assignImageToPost(wp, imageIds, post.id)
     log.info('post:', post)
-    return post
+    return {post, uploadedUrls}
   }
   catch (error) {
     log.info('error: ', error)
@@ -56,15 +59,19 @@ const validatingCategoryIds = async (wp: WPAPI, categories: string[]): Promise<a
 
 //* *Uploading Images */
 //* *Return Uploaded Image Id to imageIds array */
-const uploadImages = async (wp: WPAPI, imageUrls: string[]): Promise<any[]> => {
-  let imageIds = []
+const uploadImages = async (wp: WPAPI, imageUrls: string[]): Promise<{imageIds:number[], uploadedUrls: string[]}> => {
+  let imageIds:number[] = []
+  let uploadedUrls:string[] = []
   for (let index = 0; index < imageUrls.length; index++) {
     const imgUrl = imageUrls[index]
+    let arr = imgUrl.split('/')
+    let imgName = arr[arr.length - 1]
     let buffImg = await download(imgUrl)
-    let uploadedImg = await wp.media().file(buffImg, 'img.jpg').create({title: 'Post image'})
+    let uploadedImg = await wp.media().file(buffImg, imgName).create({title: 'Post image'})
     imageIds.push(uploadedImg.id)
+    uploadedUrls.push(uploadedImg.source_url)
   }
-  return imageIds
+  return {imageIds, uploadedUrls}
 }
 
 //* *Assigning Images to create Post */
