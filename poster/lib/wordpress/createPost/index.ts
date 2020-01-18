@@ -30,7 +30,7 @@ const createPost: CreatePost = async function ({title, content, imageUrls, categ
     data.content = addImage(data.content, uploadedUrls)
     const post = await wp.posts().create(data)
     await assignImageToPost(wp, imageIds, post.id)
-    log.info('post:', post)
+    log.info('Post is created with id', post.id)
     return {post, uploadedUrls}
   }
   catch (error) {
@@ -59,9 +59,9 @@ const validatingCategoryIds = async (wp: WPAPI, categories: string[]): Promise<a
 
 //* *Uploading Images */
 //* *Return Uploaded Image Id to imageIds array */
-const uploadImages = async (wp: WPAPI, imageUrls: string[]): Promise<{imageIds:number[], uploadedUrls: string[]}> => {
-  let imageIds:number[] = []
-  let uploadedUrls:string[] = []
+const uploadImages = async (wp: WPAPI, imageUrls: string[]): Promise<{ imageIds: number[], uploadedUrls: string[] }> => {
+  let imageIds: number[] = []
+  let uploadedUrls: string[] = []
   for (let index = 0; index < imageUrls.length; index++) {
     const imgUrl = imageUrls[index]
     let arr = imgUrl.split('/')
@@ -83,7 +83,7 @@ const assignImageToPost = async (wp: WPAPI, imageIds: number[], postId): Promise
 }
 
 //* *Adding Image to random plac inside content. */
-const addImage = (content:string, images:string[]):string => {
+const addImage = (content: string, images: string[]): string => {
   let arr = content.split(' ')
   for (let index = 0; index < images.length; index++) {
     const img = images[index]

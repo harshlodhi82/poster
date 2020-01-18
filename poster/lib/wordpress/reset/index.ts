@@ -1,18 +1,12 @@
 import log from 'lib/utils/logger'
 import WPAPI from 'wpapi'
-import c
 
 interface Reset {
-  (): Promise<void>
+  (): Promise<any>
 }
 
 // eslint-disable-next-line require-await
 const reset: Reset = async function () {
-  /* reset should delete all posts, categories, and medias */
-  log.info(this.url, this.username, this.password)
-  log.info('Running Here!')
-
-  // let data = {title, content, imageUrls, categories, status}
   const URL = this.url + 'wp-json'
   const wp = new WPAPI({
     endpoint: URL,
@@ -22,18 +16,34 @@ const reset: Reset = async function () {
   })
   try {
     let posts = await wp.posts()
-    // log.info('posts>>>>', posts)
-    for (let index = 0; index < posts.length; index++) {
-      const post = posts[index]
-      log.info('Deleteing >>>>', post.id)
-      await wp.posts().id(post.id).delete()
-    }
-    // let data =
-    // let posts2 = await wp.posts()
-    log.info('Deleted >>>>')
+    let allMedia = await wp.media()
+    let categories = await wp.categories()
+    await deleteHelper(posts, wp, 0) // delete post
+    await deleteHelper(allMedia, wp, 1) // delete media
+    await deleteHelper(categories, wp, 2) // delete categories
+    return {wp, posts, allMedia, categories}
   }
   catch (error) {
-    log.info('error>>>>', error)
+    log.info('error: ', error)
+  }
+}
+
+//* *Delete the Post, Media, Categories acording to type 0, 1, 2 respectivly */
+const deleteHelper = async (dataArr: any[], wp: any, type: number): Promise<void> => {
+  for (let index = 0; index < dataArr.length; index++) {
+    const data = dataArr[index]
+    log.info('Deleteing >>>>', data.id)
+    switch (type) {
+      case 0:
+        await wp.posts().id(data.id).delete()
+        break
+      case 1:
+        await wp.media().id(data.id).delete()
+        break
+      case 2:
+        if (data.id !== 1) await wp.categories().id(data.id).param('force', true).delete()
+        break
+    }
   }
 }
 
