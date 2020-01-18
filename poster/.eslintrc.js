@@ -4,6 +4,7 @@ module.exports = {
     "arguments": "readonly"
   },
   "rules": {
+    "no-var": "warn",
     "require-await": "error",
     "no-unmodified-loop-condition": "warn",
     "object-curly-spacing": ["error", "never"],

@@ -12,17 +12,12 @@ test('getImagesFromGoogle 3 red flowers', async () => {
 })
 
 describe('with bad proxy', () => {
-  /* this test emulates a connection using a bad proxy
-  the connection drops 50% of the time.
-  use DEBUG=proxy env to see what the proxy does */
   let proxy
   const onProxyRequestMock = jest.fn()
   beforeAll(async () => {
     proxy = await ProxyServer({
       username: 'test',
-      password: 'testPass',
-      dropRate: 0.5,
-      throttleRate: 0.5
+      password: 'testPass'
     })
     proxy.on('proxyrequest', onProxyRequestMock)
   })
