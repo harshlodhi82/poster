@@ -32,8 +32,7 @@ describe('with bad proxy', () => {
     await proxy.close()
   })
   test('getChainedTranslation 3 languages', async () => {
-    // const languages = ['es', 'fr', 'en']
-    const languages = ['es']
+    const languages = ['es', 'fr', 'en']
     const chainedTanslation = await getChainedTranslation({
       languages,
       text: originalText,
