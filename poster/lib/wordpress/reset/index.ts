@@ -14,19 +14,15 @@ const reset: Reset = async function () {
     password: this.password,
     auth: true
   })
-  try {
-    let posts = await wp.posts()
-    let allMedia = await wp.media()
-    let categories = await wp.categories()
-    await deleteHelper(posts, wp, 0) // delete post
-    await deleteHelper(allMedia, wp, 1) // delete media
-    await deleteHelper(categories, wp, 2) // delete categories
-    return {wp, posts, allMedia, categories}
-  }
-  catch (error) {
-    log.info('error: ', error)
-  }
+  let posts = await wp.posts()
+  let allMedia = await wp.media()
+  let categories = await wp.categories()
+  await deleteHelper(posts, wp, 0) // delete post
+  await deleteHelper(allMedia, wp, 1) // delete media
+  await deleteHelper(categories, wp, 2) // delete categories
+  return { wp, posts, allMedia, categories }
 }
+
 
 //* *Delete the Post, Media, Categories acording to type 0, 1, 2 respectivly */
 const deleteHelper = async (dataArr: any[], wp: any, type: number): Promise<void> => {

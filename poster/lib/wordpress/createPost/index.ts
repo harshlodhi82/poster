@@ -13,8 +13,8 @@ interface CreatePost {
 }
 
 // eslint-disable-next-line require-await
-const createPost: CreatePost = async function ({title, content, imageUrls, categories, status}) {
-  let data = {title, content, imageUrls, categories, status}
+const createPost: CreatePost = async function ({ title, content, imageUrls, categories, status }) {
+  let data = { title, content, imageUrls, categories, status }
   const URL = this.url + 'wp-json'
   const wp = new WPAPI({
     endpoint: URL,
@@ -22,20 +22,15 @@ const createPost: CreatePost = async function ({title, content, imageUrls, categ
     password: this.password,
     auth: true
   })
-  try {
-    data.categories = await validatingCategoryIds(wp, data.categories)
-    const imageData = await uploadImages(wp, data.imageUrls)
-    let imageIds = imageData.imageIds
-    let uploadedUrls = imageData.uploadedUrls
-    data.content = addImage(data.content, uploadedUrls)
-    const post = await wp.posts().create(data)
-    await assignImageToPost(wp, imageIds, post.id)
-    log.info('Post is created with id', post.id)
-    return {post, uploadedUrls}
-  }
-  catch (error) {
-    log.info('error: ', error)
-  }
+  data.categories = await validatingCategoryIds(wp, data.categories)
+  const imageData = await uploadImages(wp, data.imageUrls)
+  let imageIds = imageData.imageIds
+  let uploadedUrls = imageData.uploadedUrls
+  data.content = addImage(data.content, uploadedUrls)
+  const post = await wp.posts().create(data)
+  await assignImageToPost(wp, imageIds, post.id)
+  log.info('Post is created with id', post.id)
+  return { post, uploadedUrls }
 }
 
 //* *Validating categories */
@@ -50,7 +45,7 @@ const validatingCategoryIds = async (wp: WPAPI, categories: string[]): Promise<a
       validCtgIds.push(foundCtg[0].id)
     }
     else {
-      let nweCtg = await wp.categories().create({name: ctg})
+      let nweCtg = await wp.categories().create({ name: ctg })
       validCtgIds.push(nweCtg.id)
     }
   }
@@ -67,18 +62,18 @@ const uploadImages = async (wp: WPAPI, imageUrls: string[]): Promise<{ imageIds:
     let arr = imgUrl.split('/')
     let imgName = arr[arr.length - 1]
     let buffImg = await download(imgUrl)
-    let uploadedImg = await wp.media().file(buffImg, imgName).create({title: 'Post image'})
+    let uploadedImg = await wp.media().file(buffImg, imgName).create({ title: 'Post image' })
     imageIds.push(uploadedImg.id)
     uploadedUrls.push(uploadedImg.source_url)
   }
-  return {imageIds, uploadedUrls}
+  return { imageIds, uploadedUrls }
 }
 
 //* *Assigning Images to create Post */
 const assignImageToPost = async (wp: WPAPI, imageIds: number[], postId): Promise<void> => {
   for (let index = 0; index < imageIds.length; index++) {
     const imgId = imageIds[index]
-    await wp.media().id(imgId).update({post: postId})
+    await wp.media().id(imgId).update({ post: postId })
   }
 }
 
